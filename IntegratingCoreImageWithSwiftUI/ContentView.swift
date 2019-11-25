@@ -6,6 +6,8 @@
 //  Copyright © 2019 com.ri. All rights reserved.
 //
 
+import CoreImage
+import CoreImage.CIFilterBuiltins
 import SwiftUI
 
 struct ContentView: View {
@@ -24,7 +26,18 @@ struct ContentView: View {
         guard let inputImage = UIImage(named: "Example") else { return }
         let beginImage = CIImage(image: inputImage)
         
-        // more code to come
+        let context = CIContext()
+        let currentFilter = CIFilter.sepiaTone()
+        
+        currentFilter.inputImage = beginImage
+        currentFilter.intensity = 1
+        
+        guard let outputImage = currentFilter.outputImage else { return }
+        
+        if let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
+            let uiImage = UIImage(cgImage: cgimg)
+            image = Image(uiImage: uiImage)
+        }
     }
 }
 
